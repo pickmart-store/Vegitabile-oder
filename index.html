@@ -1,1 +1,440 @@
-h
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NSI Premium Offer Flyer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Manjari:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', 'Manjari', sans-serif;
+            background-color: #0c1a12;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #fff;
+        }
+
+        .control-panel {
+            width: 100%;
+            max-width: 420px;
+            background: #14291e;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            border: 1px solid #1f3d2e;
+        }
+
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(135deg, #cca43b, #b58d2a);
+            color: #064e28;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(204, 164, 59, 0.3);
+        }
+
+        .loading-status {
+            display: none;
+            color: #cca43b;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+
+        .posters-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .poster-wrapper {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .poster-card {
+            width: 100%;
+            aspect-ratio: 1 / 1; 
+            background: linear-gradient(135deg, #071c11 0%, #0d291b 100%);
+            border: 4px solid #cca43b;
+            border-radius: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            padding: 20px 22px;
+            justify-content: space-between;
+        }
+
+        .poster-header {
+            text-align: center;
+            border-bottom: 1px solid rgba(254, 254, 254, 0.1);
+            padding-bottom: 6px;
+        }
+
+        .logo-text {
+            font-size: 26px;
+            font-weight: 800;
+            color: #cca43b;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .logo-sub {
+            font-size: 10px;
+            color: #ffffff;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .title-badge {
+            background: #cca43b;
+            color: #071c11;
+            padding: 2px 16px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 4px;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .meta-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 11px;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+
+        .items-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px; 
+            margin: 10px 0;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .item-row {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(204, 164, 59, 0.15);
+            border-radius: 6px;
+            padding: 8px 14px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-sizing: border-box;
+            height: auto; 
+            overflow: visible; /* ചിഹ്നങ്ങൾ മുറിഞ്ഞു പോകാതിരിക്കാൻ */
+        }
+
+        .box-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+            overflow: visible;
+        }
+
+        .box-num {
+            font-size: 11px;
+            color: #cca43b;
+            font-weight: 700;
+            opacity: 0.6;
+            width: 18px;
+        }
+
+        /* 🛠️ മലയാളം ചിഹ്നങ്ങൾക്ക് ആവശ്യത്തിന് സ്പേസ് നൽകി തിരുത്തിയത് */
+        .box-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.8; /* ചിഹ്നങ്ങൾക്ക് മുകളിൽ നല്ല ഗ്യാപ്പ് നൽകുന്നു */
+            white-space: normal; /* അക്ഷരങ്ങൾ കട്ട് ആകുന്നത് തടയുന്നു */
+            overflow: visible;
+        }
+
+        .box-price-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .price-regular {
+            font-size: 11px;
+            color: #e53e3e;
+            text-decoration: line-through; 
+            font-weight: 500;
+            opacity: 0.85;
+        }
+
+        .price-offer {
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffb703;
+            min-width: 45px;
+            text-align: right;
+        }
+
+        .poster-footer {
+            border-top: 1px solid rgba(254, 254, 254, 0.1);
+            padding-top: 8px;
+            text-align: center;
+        }
+
+        .footer-banner-wa {
+            font-size: 11px;
+            font-weight: 600;
+            color: #cca43b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .footer-banner-wa span {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .btn-share-wa {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .text-backup-card {
+            background: #14291e;
+            padding: 18px;
+            border-radius: 16px;
+            max-width: 420px;
+            margin: 20px auto;
+            display: none;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #1f3d2e;
+        }
+        textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #1f3d2e; background: #0c1a12; color: #fff; font-family: inherit; font-size: 13px; box-sizing: border-box; }
+        .btn-copy-text { width: 100%; background: #cca43b; color: #071c11; border: none; padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: 700; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="control-panel">
+        <h2 style="margin: 0 0 5px 0; font-size: 20px; color: #cca43b; font-weight: 800;">NSI Studio Style</h2>
+        <p style="margin: 0 0 18px 0; font-size: 12px; color: #a0aec0;">Fixed Single Column Design (15 Items)</p>
+        <button class="btn-generate" onclick="generatePremiumPosters()">🎨 ഡിзайനർ പോസ്റ്റർ നിർമ്മിക്കുക</button>
+    </div>
+
+    <div id="loading" class="loading-status">⏳ റേറ്റുകൾ കൃത്യമായി ക്രമീകരിക്കുന്നു...</div>
+
+    <div class="posters-container" id="posters-container"></div>
+
+    <div class="text-backup-card" id="text-card">
+        <span style="font-size: 13px; font-weight: 700; color: #cca43b; display:block; margin-bottom: 8px;">💬 വാട്സാപ്പ് ടെക്സ്റ്റ് ലിസ്റ്റ്:</span>
+        <textarea id="text-area" rows="5"></textarea>
+        <button class="btn-copy-text" onclick="copyBroadcastText()">📋 കോപ്പി ചെയ്യുക</button>
+    </div>
+
+<script>
+    const sheetAppUrl = "https://script.google.com/macros/s/AKfycbyg9RmH2iFblNzWNBBL7J4SR-W003CQnDju8RPoPBINF_cD6Fdidkn7h9QLvMsL8u4z/exec";
+
+    function generatePremiumPosters() {
+        const loading = document.getElementById("loading");
+        const container = document.getElementById("posters-container");
+        const tCard = document.getElementById("text-card");
+
+        loading.style.display = "block";
+        container.innerHTML = "";
+        tCard.style.display = "none";
+
+        fetch(sheetAppUrl)
+            .then(res => res.json())
+            .then(data => {
+                loading.style.display = "none";
+
+                let rawProducts = [];
+                if (Array.isArray(data)) { rawProducts = data; }
+                else if (data && Array.isArray(data.data)) { rawProducts = data.data; }
+
+                let cleanedItems = [];
+                rawProducts.forEach(product => {
+                    const keys = Object.keys(product).reduce((acc, k) => {
+                        acc[k.toLowerCase().replace(/\s+/g, '')] = product[k];
+                        return acc;
+                    }, {});
+
+                    let name = keys['name'] || product['Name'] || product['name'] || "";
+                    let offerPrice = parseFloat(keys['offerprice'] || product['OfferPrice'] || product['offerPrice'] || 0);
+                    let regularPrice = parseFloat(keys['regularprice'] || product['RegularPrice'] || product['regularPrice'] || 0);
+
+                    if (name && name !== "No Name" && offerPrice > 0) {
+                        cleanedItems.push({ 
+                            name: name, 
+                            offer: offerPrice,
+                            regular: regularPrice > 0 ? regularPrice : offerPrice + 10
+                        });
+                    }
+                });
+
+                if (cleanedItems.length === 0) {
+                    alert("ഷീറ്റിൽ ഡാറ്റ ഒന്നും കണ്ടെത്തിയില്ല!");
+                    return;
+                }
+
+                const currentDate = new Date().toLocaleDateString('en-IN');
+                const limit = 15; 
+                const totalPageCount = Math.ceil(cleanedItems.length / limit);
+
+                for (let page = 0; page < totalPageCount; page++) {
+                    const start = page * limit;
+                    const end = Math.min(start + limit, cleanedItems.length);
+                    const chunk = cleanedItems.slice(start, end);
+
+                    let wrapper = document.createElement('div');
+                    wrapper.className = 'poster-wrapper';
+                    let posterId = `poster-page-${page + 1}`;
+
+                    let listRows = "";
+                    chunk.forEach((item, index) => {
+                        const serialNumber = start + index + 1;
+                        listRows += `
+                            <div class="item-row">
+                                <div class="box-left">
+                                    <span class="box-num">${serialNumber}</span>
+                                    <span class="box-title">${item.name}</span>
+                                </div>
+                                <div class="box-price-container">
+                                    <span class="price-regular">₹${item.regular}</span>
+                                    <span class="price-offer">₹${item.offer}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    wrapper.innerHTML = `
+                        <div class="poster-card" id="${posterId}">
+                            <div class="poster-header">
+                                <h1 class="logo-text">NSI FRESH</h1>
+                                <span class="logo-sub">PREMIUM VEGETABLES</span>
+                                <br>
+                                <div class="title-badge">DAILY PRICE LIST</div>
+                                <div class="meta-info">
+                                    <span>📆 Date: ${currentDate}</span>
+                                    <span style="color: #cca43b">PAGE ${page + 1} / ${totalPageCount}</span>
+                                </div>
+                            </div>
+
+                            <div class="items-list-container">
+                                ${listRows}
+                            </div>
+
+                            <div class="poster-footer">
+                                <div class="footer-banner-wa">
+                                    📱 Order on WhatsApp: <span>+91 75 93 92 59 26</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-share-wa" onclick="sharePosterToWhatsApp('${posterId}', ${page + 1})">
+                            🟢 പേജ് ${page + 1} വാട്സാപ്പിൽ ഷെയർ ചെയ്യാം
+                        </button>
+                    `;
+
+                    container.appendChild(wrapper);
+                }
+
+                let broadcastMessage = `🥬 *NSI FRESH & GREEN* 🥬\n📆 Date: ${currentDate}\n\n`;
+                cleanedItems.forEach((item, idx) => {
+                    broadcastMessage += `${idx + 1}. ${item.name} ➔ ₹~~${item.regular}~~ *₹${item.offer}/kg*\n`;
+                });
+                broadcastMessage += `\n🛒 Order Now on WhatsApp!`;
+                document.getElementById("text-area").value = broadcastMessage;
+                tCard.style.display = "block";
+            })
+            .catch(error => {
+                loading.style.display = "none";
+                alert("ഡാറ്റ ലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല!");
+            });
+    }
+
+    function sharePosterToWhatsApp(elementId, pageNum) {
+        const element = document.getElementById(elementId);
+        const btn = element.nextElementSibling;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "⏳ ഫോട്ടോ തയാറാക്കുന്നു...";
+        btn.disabled = true;
+
+        html2canvas(element, {
+            scale: 3, 
+            useCORS: true,
+            backgroundColor: "#0c1a12"
+        }).then(canvas => {
+            canvas.toBlob(blob => {
+                const file = new File([blob], `NSI_Offer_Page_${pageNum}.png`, { type: 'image/png' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: `NSI Price List`,
+                        text: `NSI Fresh Offer List (Page ${pageNum})`
+                    })
+                    .then(() => { btn.innerHTML = originalText; btn.disabled = false; })
+                    .catch((err) => { btn.innerHTML = originalText; btn.disabled = false; });
+                } else {
+                    const a = document.createElement('a');
+                    a.href = canvas.toDataURL('image/png');
+                    a.download = `NSI_Offer_Page_${pageNum}.png`;
+                    a.click();
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert("ഫോട്ടോ ഡൗൺലോഡ് ആയിട്ടുണ്ട്!");
+                }
+            }, 'image/png');
+        });
+    }
+
+    function copyBroadcastText() {
+        const area = document.getElementById("text-area");
+        area.select();
+        navigator.clipboard.writeText(area.value);
+        alert("🎉 ലിസ്റ്റ് കോപ്പി ചെയ്തു!");
+    }
+</script>
+</body>
+</html>
